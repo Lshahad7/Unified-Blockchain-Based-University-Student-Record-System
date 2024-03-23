@@ -1,0 +1,29 @@
+{
+  "canisters": {
+    "uniBlocks_backend": {
+      "main": "src/uniBlocks_backend/main.mo",
+      "type": "motoko"
+    },
+    "uniBlocks_frontend": {
+      "dependencies": [
+        "uniBlocks_backend"
+      ],
+      "frontend": {
+        "entrypoint": "src/uniBlocks_frontend/src/index.html"
+      },
+      "source": [
+        "src/uniBlocks_frontend/assets",
+        "dist/uniBlocks_frontend/"
+      ],
+      "type": "assets"
+    }
+  },
+  "defaults": {
+    "build": {
+      "args": "",
+      "packtool": ""
+    }
+  },
+  "output_env_file": ".env",
+  "version": 1
+}
