@@ -26,8 +26,8 @@ function StudentLogin() {
         try {
             console.log("in function");
             setLoading(true);
-            const ledgerQuery = ic("vbway-byaaa-aaaap-abuvq-cai");
-            const result = await ledgerQuery.call("QueryStudent", nationalId);
+            const ledgerInvoice = ic.local("bkyz2-fmaaa-aaaaa-qaaaq-cai");
+            const result = await ledgerInvoice.call("QueryStudent", nationalId);
             // Convert BigInt values to strings before setting the state
             convertBigIntToString(result);
             setstudentData(result);
