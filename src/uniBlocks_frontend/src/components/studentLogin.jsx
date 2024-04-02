@@ -35,7 +35,7 @@ function StudentLogin() {
                 const studentRecord = studentData[0];
                 console.log("Student data: " + studentRecord.password);//testing
                 if (studentRecord.password == password) {
-                    const result1 = await ledgerQuery.call("QueryUniversity", studentRecord.uniqueID);
+                    const result1 = await ledgerInvoice.call("QueryUniversity", studentRecord.uniqueID);
                     convertBigIntToString(result1);
                     setData(result1);
                     setloggedIn(true);
