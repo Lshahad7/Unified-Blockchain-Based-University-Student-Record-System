@@ -5,7 +5,7 @@ import axios from 'axios';
 
 const { ic } = require("ic0");
 
-const ledgerInvoice = ic("vbway-byaaa-aaaap-abuvq-cai");
+const ledgerInvoice = ic.local("bkyz2-fmaaa-aaaaa-qaaaq-cai");
 
 function makepassword(length) {
   let result = '';
