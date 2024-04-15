@@ -11,13 +11,23 @@ const AppContainer = () => {
   const [authenticated, setAuthenticated] = useState(false);
   const [authClient, setAuthClient] = useState(null);
   const [identity, setIdentity] = useState(null);
+  const [client1, setClient] = useState(null);
 
   const init = async () => {
     const client = await AuthClient.create();
     setAuthClient(client);
+    setClient(client);
 
     if (await client.isAuthenticated()) {
       handleAuthenticated(client);
+    }
+  };
+
+  const handleIIdisconnect = async () => {
+    if (authClient) { // Check if authClient is available
+      console.log("=>",authClient);
+      await authClient.logout();
+      window.location.reload();
     }
   };
 
@@ -47,7 +57,7 @@ const AppContainer = () => {
     <StrictMode>
       {authenticated ? (
         <>
-          <App loggedInPrincipal={identity} onLoginClick={handleLogin} />
+          <App loggedInPrincipal={identity} onLoginClick={handleLogin} onDisconnect={handleIIdisconnect}/>
         </>
       ) : (
         <>

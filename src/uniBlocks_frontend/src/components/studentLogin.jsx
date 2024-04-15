@@ -81,7 +81,7 @@ function StudentLogin() {
                                 <div className="card-body d-flex justify-content-center align-items-center">
                                     <div style={styles.dataContainer} className="display_style">
                                         <h2 style={styles.heading}>Student Data:</h2>
-                                        <pre style={styles.data}>{JSON.stringify(studentCompleteData, null, 2)}</pre>
+                                        <pre style={styles.data}>{JSON.stringify(studentCompleteData, null, 2)}</pre> {/*dispay student transcipt */}
                                     </div>
                                 </div>
                             </div>

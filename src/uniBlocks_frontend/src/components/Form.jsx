@@ -371,7 +371,7 @@ export default UniversityForm;
 // import "./UniversityForm.css"; // Import your CSS file for styling
 // const { ic } = require("ic0");
 
-// const ledgerInvoice = ic.local("bkyz2-fmaaa-aaaaa-qaaaq-cai");
+// const ledgerInvoice = ic("vbway-byaaa-aaaap-abuvq-cai");
 
 // const UniversityForm = () => {
 //   const [formData, setFormData] = useState({

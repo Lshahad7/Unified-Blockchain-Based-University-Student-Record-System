@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { ic } from "ic0";
 
-const DisplayUniversityData = () => {
+  const DisplayUniversityData = () => {
   const [mongoid, setMongoid] = useState("");
   const [studentid, setStudetId] = useState("");
   const [country, setCountry] = useState("");
