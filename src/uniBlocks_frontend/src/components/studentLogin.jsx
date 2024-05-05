@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { ic } from "ic0";
+import TranscriptPDF from './TranscriptPDF';
+import { PDFViewer } from '@react-pdf/renderer';
 
 function StudentLogin() {
     // State hooks for storing input values
@@ -23,32 +25,35 @@ function StudentLogin() {
 
 
     const fetchData = async () => {
+        console.log("in function");
+        setLoading(true);
+
         try {
-            console.log("in function");
-            setLoading(true);
-            const ledgerInvoice = ic.local("bkyz2-fmaaa-aaaaa-qaaaq-cai");
-            const result = await ledgerInvoice.call("QueryStudent", nationalId);
-            // Convert BigInt values to strings before setting the state
-            convertBigIntToString(result);
-            setstudentData(result);
-            if (studentData !== null) {
-                const studentRecord = studentData[0];
-                console.log("Student data: " + studentRecord.password);//testing
-                if (studentRecord.password == password) {
-                    const result1 = await ledgerInvoice.call("QueryUniversity", studentRecord.uniqueID);
+            const ledgerQuery = ic.local("bkyz2-fmaaa-aaaaa-qaaaq-cai");
+            const result = await ledgerQuery.call("QueryStudent", nationalId);
+
+            if (result) {
+                convertBigIntToString(result);
+                setstudentData(result); 
+                const studentRecord = result[0];
+                console.log("Student data: " + studentRecord.password);
+
+                if (studentRecord && studentRecord.password === password) {
+                    const result1 = await ledgerQuery.call("QueryUniversity", studentRecord.uniqueID);
                     convertBigIntToString(result1);
-                    setData(result1);
+                    setData(result1); 
                     setloggedIn(true);
                 }
+            } else {
+                console.log("No student data found");
             }
-            // Check if studentData is still null and counter is within limit for recursive call
-
         } catch (error) {
             console.error("Error fetching university data:", error);
         } finally {
             setLoading(false);
         }
     };
+
 
     const handleSubmit = (e) => {
         e.preventDefault();
@@ -77,14 +82,18 @@ function StudentLogin() {
                 {loggedIn ? (
                     <>
                         {studentCompleteData && (
-                            <div className="card mx-4 my-5" style={{ width: '30rem', height: 'auto', borderRadius: '35px' }}>
-                                <div className="card-body d-flex justify-content-center align-items-center">
-                                    <div style={styles.dataContainer} className="display_style">
-                                        <h2 style={styles.heading}>Student Data:</h2>
-                                        <pre style={styles.data}>{JSON.stringify(studentCompleteData, null, 2)}</pre> {/*dispay student transcipt */}
-                                    </div>
-                                </div>
-                            </div>
+                            // <div className="card mx-4 my-5" style={{ width: '30rem', height: 'auto', borderRadius: '35px' }}>
+                            //     <div className="card-body d-flex justify-content-center align-items-center">
+                            //         <div style={styles.dataContainer} className="display_style">
+                            //             <h2 style={styles.heading}>Student Data:</h2>
+                            //             <pre style={styles.data}>{JSON.stringify(studentCompleteData, null, 2)}</pre>
+                            //         </div>
+                            //     </div>
+                            // </div>
+
+                            <PDFViewer style={{ width: '100%', height: '90vh', marginTop: '15px' }}>
+                                <TranscriptPDF universityData={studentCompleteData} />
+                            </PDFViewer>
 
                         )}
 

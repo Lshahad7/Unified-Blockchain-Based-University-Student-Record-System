@@ -1,7 +1,9 @@
 import React, { useState } from "react";
 import { ic } from "ic0";
+import { PDFViewer } from '@react-pdf/renderer';
+import TranscriptPDF from './TranscriptPDF';
 
-  const DisplayUniversityData = () => {
+const DisplayUniversityData = () => {
   const [mongoid, setMongoid] = useState("");
   const [studentid, setStudetId] = useState("");
   const [country, setCountry] = useState("");
@@ -11,8 +13,10 @@ import { ic } from "ic0";
   const fetchUniversityData = async () => {
     try {
       setLoading(true);
-      const ledgerInvoice = ic.local("bkyz2-fmaaa-aaaaa-qaaaq-cai");
-      const result = await ledgerInvoice.call("QueryUniversity", mongoid + '-' + studentid + '-' + country);
+      const ledgerQuery = ic.local("bkyz2-fmaaa-aaaaa-qaaaq-cai");
+      console.log("ID:", studentid + '-' + mongoid + '-' + country);
+      const result = await ledgerQuery.call("QueryUniversity", studentid + '-' + mongoid + '-' + country);
+      console.log(result);
       // Convert BigInt values to strings before setting the state
       convertBigIntToString(result);
       setUniversityData(result);
@@ -35,55 +39,63 @@ import { ic } from "ic0";
   };
 
   return (
-    <div className="card col-md-3 mx-2" style={{ width: '27rem', height: 'auto' }}>
-      <center><h2>View Transcript</h2></center>
-      <div className="card-body d-flex justify-content-center align-items-center">
-        <div>
-          <label style={styles.label}>
-            Enter University ID:
-            <input
-              type="text"
-              value={mongoid}
-              onChange={(e) => setMongoid(e.target.value)}
-              style={styles.input}
-            />
-          </label>
-          <label style={styles.label}>
-            Enter Student ID:
-            <input
-              type="text"
-              value={studentid}
-              onChange={(e) => setStudetId(e.target.value)}
-              style={styles.input}
-            />
-          </label>
-          <label style={styles.label}>
-            Enter Student Country:
-            <input
-              type="text"
-              value={country}
-              onChange={(e) => setCountry(e.target.value)}
-              style={styles.input}
-            />
-          </label>
+    <>
+      <div className="card col-md-3 mx-2" style={{ width: '27rem', height: 'auto' }}>
+        <center><h2>View Transcript</h2></center>
+        <div className="card-body d-flex justify-content-center align-items-center">
+          <div>
+            <label style={styles.label}>
+              Enter Student ID:
+              <input
+                type="text"
+                value={studentid}
+                onChange={(e) => setStudetId(e.target.value)}
+                style={styles.input}
+              />
+            </label>
+            <label style={styles.label}>
+              Enter University ID:
+              <input
+                type="text"
+                value={mongoid}
+                onChange={(e) => setMongoid(e.target.value)}
+                style={styles.input}
+              />
+            </label>
+            <label style={styles.label}>
+              Enter Student Country:
+              <input
+                type="text"
+                value={country}
+                onChange={(e) => setCountry(e.target.value)}
+                style={styles.input}
+              />
+            </label>
 
-          <button onClick={fetchUniversityData} disabled={loading} style={styles.button}>
-            Show
-          </button>
+            <button onClick={fetchUniversityData} disabled={loading} style={styles.button}>
+              Show
+            </button>
 
-          {/* Display loader while loading is true */}
-          {loading && <div style={styles.loader}>Loading...</div>}
+            {/* Display loader while loading is true */}
+            {loading && <div style={styles.loader}>Loading...</div>}
 
-          {/* Display fetched university data */}
-          {universityData && (
-            <div style={styles.dataContainer} className="display_style">
-              <h2 style={styles.heading}>Fetched University Data:</h2>
-              <pre style={styles.data}>{JSON.stringify(universityData, null, 2)}</pre>
-            </div>
-          )}
+            {/* Display fetched university data */}
+            {/* {universityData && (
+              <div style={styles.dataContainer} className="display_style">
+                <h2 style={styles.heading}>Fetched University Data:</h2>
+                <pre style={styles.data}>{JSON.stringify(universityData, null, 2)}</pre>
+              </div>
+            )} */}
+          </div>
         </div>
       </div>
-    </div>
+
+      {universityData && (
+        <PDFViewer style={{ width: '100%', height: '90vh', marginTop: '15px' }}>
+          <TranscriptPDF universityData={universityData} />
+        </PDFViewer>
+      )}
+    </>
   );
 };
 

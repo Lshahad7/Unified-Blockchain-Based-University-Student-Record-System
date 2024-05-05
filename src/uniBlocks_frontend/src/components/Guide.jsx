@@ -62,7 +62,12 @@ function Guidelines() {
                                 </ul>
                                 <p>By adhering to these guidelines, you ensure that the data is structured consistently and can be processed accurately. Thank you for your cooperation.</p>
                                 <h3 className="card-title">Sample Data</h3>
-                                
+                                <div className="images_style">
+                                    <img src='/1.PNG?canisterId=bd3sg-teaaa-aaaaa-qaaba-cai'/>
+                                    <img src='/2.PNG?canisterId=bd3sg-teaaa-aaaaa-qaaba-cai'/>
+                                    <img src='/3.PNG?canisterId=bd3sg-teaaa-aaaaa-qaaba-cai'/>
+                                    <img src='/4.PNG?canisterId=bd3sg-teaaa-aaaaa-qaaba-cai'/>
+                                </div>
                             </div>
 
                         </div>

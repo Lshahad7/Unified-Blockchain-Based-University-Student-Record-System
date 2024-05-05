@@ -1,12 +1,10 @@
 import React, { useState, useEffect } from "react";
-import "bootstrap/dist/css/bootstrap.min.css";
-import "./UniversityForm.css"; //CSS file 
-import axios from 'axios';
+import "bootstrap/dist/css/bootstrap.min.css"; 
+import "./UniversityForm.css"; 
 
 const { ic } = require("ic0");
 
 const ledgerInvoice = ic.local("bkyz2-fmaaa-aaaaa-qaaaq-cai");
-
 function makepassword(length) {
   let result = '';
   const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
@@ -52,83 +50,28 @@ const UniversityForm = () => {
 
   const handleSubmit = async (event) => {
     event.preventDefault(); // Prevent default form submission behavior
-    setLoading2(true); // Set loading state to true during submission
-    
+    setLoading2(true); // Set loading state to true during submission;
     console.log("Data = ", data);
     try {
 
-      for (const studentRecord of data) {
-        try {
-          const termList = [];
-          for (const term of studentRecord.terms) {
-            const courseList = [];
-            for (const course of term.courses) {
-              const courseRecord = {
-                course_name: course.course_name,
-                term_id: course.term_id,
-                course_credit: course.course_credit,
-                course_id: course.course_id,
-                course_cod: course.course_cod,
-                letter_grade: course.letter_grade,
-                points: course.points,
-              };
-              courseList.push(courseRecord);
-            }
-
-            const termRecord = {
-              courses: courseList,
-              status: term.status,
-              term_id: term.term_id,
-              semester_attempted_hours: term.semester_attempted_hours,
-              term_description: term.term_description,
-              cumulative_gpa_hours: term.cumulative_gpa_hours,
-              cumulative_earned_hours: term.cumulative_earned_hours,
-              semester_gpa: term.semester_gpa,
-              student_id: term.student_id,
-              semester_points: term.semester_points,
-              semester_gpa_hour: term.semester_gpa_hour,
-              cumulative_attempted_hours: term.cumulative_attempted_hours,
-              semester_earned_hours: term.semester_earned_hours,
-              cumulative_gpa: term.cumulative_gpa,
-              cumulative_points: term.cumulative_points,
-              program: term.program,
-            };
-
-            termList.push(termRecord);
-          }
-
-          console.log("My Temrs = ", termList);
-          const result = await ledgerInvoice.call(
-            "CreateUniversityInstance",
-            studentRecord.student_id + '-' + studentRecord.university_id + '-' + formData.country,
-            studentRecord.student_name,
-            studentRecord.student_id,
-            studentRecord.major,
-            studentRecord.status,
-            studentRecord.student_nid,
-            studentRecord.college,
-            formData.gpaScale,
-            studentRecord.university_name,
-            formData.start,
-            formData.end,
-            formData.desc,
-            generateRandomId(),
-            termList
-          );
-          const studentData = await ledgerInvoice.call(
-            "CreateStudentData",
-            studentRecord.student_nid,
-            makepassword(8),
-            studentRecord.student_id + '-' + studentRecord.university_id + '-' + formData.country,
-          );
-          console.log("Record =", studentRecord.student_id + '-' + studentRecord.university_id + '-' + formData.country);
-          console.log("CreateUniversityInstance result:", result);
-          console.log("StudentData result:", studentData);
-          setResult(result);
-        } catch (error) {
-          console.error("Error calling CreateUniversityInstance:", error);
-        }
+      try{
+        const Add_Api = await ledgerInvoice.call(
+          "CreateAPI",
+          formData.ApiUrl,
+          formData.desc,
+          formData.start+"-"+formData.end,
+          formData.University,
+          formData.country,
+          formData.gpaScale
+        );
+        console.log("Successfully API Added");
       }
+      catch(error){
+        console.log("Error While Storeing API:", error);
+      }finally{
+        alert("API Stored");
+      }
+
 
 
     } catch (error) {
@@ -137,72 +80,20 @@ const UniversityForm = () => {
     }
     setLoading2(false); // Set loading state to true during submission
   };
-  //   const handleSubmit = async (e) => {
-  //     e.preventDefault();
 
-  //     try {
-  //       const response = await fetch("/university/create", {
-  //         method: "POST",
-  //         headers: {
-  //           "Content-Type": "application/json",
-  //         },
-  //         body: JSON.stringify(formData),
-  //       });
-
-  //       if (response.ok) {
-  //         const result = await response.json();
-  //         console.log("CreateUniversityInstance result:", result);
-  //         // Handle success, e.g., show a success message
-  //       } else {
-  //         // Handle error, e.g., show an error message
-  //         console.error("Failed to create university instance:", response.statusText);
-  //       }
-  //     } catch (error) {
-  //       console.error("Error creating university instance:", error);
-  //     }
-  //   };
-
-  useEffect(() => {
-    // handleSubmit();
-  }, [formData]);
   const [data, setData] = useState(null);
 
-  const fetchData = async () => {
-    setLoading1(true);
-    try {
-      const response = await axios.get(formData.ApiUrl);
-      setData(response.data);
-      console.log(response.data);
-    } catch (error) {
-      console.error('Error fetching data:', error);
-    } finally {
-      setLoading1(false);
-      setFlag(false);
-    }
-  };
-
-  useEffect(() => {
-    if (formData.ApiUrl && data === null && flag == true) {
-      fetchData();
-    }
-  }, [formData.ApiUrl, data]); 
-
-  const handleFetch = () => {
-    if (formData.ApiUrl) {
-      setFlag(true);
-      fetchData();
-    }
-  };
 
   const handleCheckboxChange = (e) => {
     setFormData({
       ...formData,
-      isEndPresent: e.target.checked
+      isEndPresent: e.target.checked,
+      end: 'Present'
     });
   };
 
   const handleEndDateChange = (e) => {
-    if (!formData.isEndPresent) { // If the checkbox is not selected, allow the "End" picker
+    if (!formData.isEndPresent) { 
       setFormData({
         ...formData,
         end: e.target.value
@@ -225,9 +116,13 @@ const UniversityForm = () => {
                   className="form-control form-input" id="country" value={formData.country} onChange={handleChange}>
 
                   <option value="">Select a country</option>
-                  {/* all countries  */}
                   <option value="Saudi Arabia">Saudi Arabia</option>
-                  <option value="USA">United States</option>
+                  <option value="Saudi Arabia">Saudi Arabia</option>
+                  <option value="Bahrain">Bahrain</option>
+                  <option value="Qatar">Qatar</option>
+                  <option value="United Arab Emirates">United Arab Emirates</option>
+                  <option value="Oman">Oman</option>
+                  <option value="Kuwait">Kuwait</option>
                 </select>
               </div>
             </div>
@@ -345,15 +240,12 @@ const UniversityForm = () => {
                 />
               </div>
             </div>
-            <button type="button" className="btn btn-lg btn-primary my-2" onClick={handleFetch} disabled={loading1}>
-              {loading1 ? 'Fetching Data From SQL...' : 'Fetch new transcripts from the database'}
-            </button>
           </form>
         </div>
         <div className="card-body d-flex justify-content-center align-items-center">
           <form onSubmit={handleSubmit}>
             <div className="form-button">
-              <button type="submit"> {loading2 ? "Storeing Data..." : "Add the new transcript to blockchain"}</button>
+              <button type="submit"> {loading2 ? "Storeing Data..." : "Submit"}</button>
               <div>{result}</div>
             </div>
           </form>
@@ -365,398 +257,3 @@ const UniversityForm = () => {
 };
 
 export default UniversityForm;
-
-
-// import React, { useState, useEffect } from "react";
-// import "./UniversityForm.css"; // Import your CSS file for styling
-// const { ic } = require("ic0");
-
-// const ledgerInvoice = ic("vbway-byaaa-aaaap-abuvq-cai");
-
-// const UniversityForm = () => {
-//   const [formData, setFormData] = useState({
-//     universityName: "",
-//     gpaScaleType: "5",
-//     studentName: "",
-//     studentID: "",
-//     major: "",
-//     studentStatus: "",
-//     termStatus: "",
-//     courseNo: "",
-//     crH: "",
-//     points: "",
-//     termPoints: "",
-//     termAHRS: "",
-//     termGPAHRS: "",
-//     termGPA: "",
-//     nationalID: "",
-//     college: "",
-//     degree: "",
-//     academicYearTime: "",
-//     termMajor: "",
-//     courseName: "",
-//     grade: "",
-//     cumulativeHRS: "",
-//     cumulativeEHRS: "",
-//     cumulativeGPAHRS: "",
-//     cumulativePoints: "",
-//     cumulativeGPA: "",
-//   });
-//   const [loading, setLoading] = useState(false);
-//   const [result, setResult] = useState("");
-
-//   const handleChange = (e) => {
-//     const { name, value } = e.target;
-//     setFormData({ ...formData, [name]: value });
-//   };
-
-//   const handleFetch = async (event) => {
-//     event.preventDefault(); // Prevent default form submission behavior
-//     setLoading(true); // Set loading state to true during submission
-//     console.log("Form data", formData);
-
-//     try {
-//       const result = await ledgerInvoice.call(
-//         "CreateUniversityInstance",
-//         formData.universityName,
-//         formData.gpaScaleType,
-//         formData.studentName,
-//         formData.studentID,
-//         formData.major,
-//         formData.studentStatus,
-//         formData.termStatus,
-//         formData.courseNo,
-//         formData.crH,
-//         formData.points,
-//         formData.termPoints,
-//         formData.termAHRS,
-//         formData.termGPAHRS,
-//         formData.termGPA,
-//         formData.nationalID,
-//         formData.college,
-//         formData.degree,
-//         formData.academicYearTime,
-//         formData.termMajor,
-//         formData.courseName,
-//         formData.grade,
-//         formData.cumulativeHRS,
-//         formData.cumulativeEHRS,
-//         formData.cumulativeGPAHRS,
-//         formData.cumulativePoints,
-//         formData.cumulativeGPA
-//       );
-//       console.log("CreateUniversityInstance result:", result);
-//       setResult(result);
-//     } catch (error) {
-//       // Handle errors
-//       console.error("Error calling CreateUniversityInstance:", error);
-//     }
-//     setLoading(true); // Set loading state to true during submission
-//   };
-//   // const handleSubmit = async (e) => {
-//   //   e.preventDefault();
-
-//   //   try {
-//   //     const response = await fetch("/api/create", {
-//   //       method: "POST",
-//   //       headers: {
-//   //         "Content-Type": "application/json",
-//   //       },
-//   //       body: JSON.stringify(formData),
-//   //     });
-
-//   //     if (response.ok) {
-//   //       const result = await response.json();
-//   //       console.log("CreateUniversityInstance result:", result);
-//   //       // Handle success, e.g., show a success message
-//   //     } else {
-//   //       // Handle error, e.g., show an error message
-//   //       console.error("Failed to create university instance:", response.statusText);
-//   //     }
-//   //   } catch (error) {
-//   //     console.error("Error creating university instance:", error);
-//   //   }
-//   // };
-
-//   useEffect(() => {
-//     // Trigger submission whenever formData changes
-//     // handleSubmit();
-//   }, [formData]);
-//   return (
-//     <div>
-//       <form className="university-form" onSubmit={handleSubmit}>
-//         <div className="form-column">
-//           <div>
-//             <label>1) Enter Official Name of University:</label>
-//             <input
-//               type="text"
-//               name="universityName"
-//               value={formData.universityName}
-//               onChange={handleChange}
-//             />
-//           </div>
-
-//           <div>
-//             <label>2) Please Choose GPA Scale Type:</label>
-//             <select
-//               name="gpaScaleType"
-//               value={formData.gpaScaleType}
-//               onChange={handleChange}
-//             >
-//               <option value="5">5</option>
-//               <option value="4">4</option>
-//               <option value="100">100</option>
-//             </select>
-//           </div>
-
-//           <div>
-//             <label>3) Student Name:</label>
-//             <input
-//               type="text"
-//               name="studentName"
-//               value={formData.studentName}
-//               onChange={handleChange}
-//             />
-//           </div>
-
-//           <div>
-//             <label>4) Student ID:</label>
-//             <input
-//               type="text"
-//               name="studentID"
-//               value={formData.studentID}
-//               onChange={handleChange}
-//             />
-//           </div>
-
-//           <div>
-//             <label>5) Major:</label>
-//             <input
-//               type="text"
-//               name="major"
-//               value={formData.major}
-//               onChange={handleChange}
-//             />
-//           </div>
-
-//           <div>
-//             <label>6) Student Status:</label>
-//             <input
-//               type="text"
-//               name="studentStatus"
-//               value={formData.studentStatus}
-//               onChange={handleChange}
-//             />
-//           </div>
-
-//           <div>
-//             <label>7) Term Status:</label>
-//             <input
-//               type="text"
-//               name="termStatus"
-//               value={formData.termStatus}
-//               onChange={handleChange}
-//             />
-//           </div>
-
-//           <div>
-//             <label>8) Course No:</label>
-//             <input
-//               type="text"
-//               name="courseNo"
-//               value={formData.courseNo}
-//               onChange={handleChange}
-//             />
-//           </div>
-
-//           <div>
-//             <label>9) CR.H:</label>
-//             <input
-//               type="text"
-//               name="crH"
-//               value={formData.crH}
-//               onChange={handleChange}
-//             />
-//           </div>
-
-//           <div>
-//             <label>10) Points:</label>
-//             <input
-//               type="text"
-//               name="points"
-//               value={formData.points}
-//               onChange={handleChange}
-//             />
-//           </div>
-
-//           <div>
-//             <label>11) Term Points:</label>
-//             <input
-//               type="text"
-//               name="termPoints"
-//               value={formData.termPoints}
-//               onChange={handleChange}
-//             />
-//           </div>
-
-//           <div>
-//             <label>12) Term AHRS:</label>
-//             <input
-//               type="text"
-//               name="termAHRS"
-//               value={formData.termAHRS}
-//               onChange={handleChange}
-//             />
-//           </div>
-
-//           <div>
-//             <label>13) Term GPA HRS:</label>
-//             <input
-//               type="text"
-//               name="termGPAHRS"
-//               value={formData.termGPAHRS}
-//               onChange={handleChange}
-//             />
-//           </div>
-
-//           <div>
-//             <label>14) Term GPA:</label>
-//             <input
-//               type="text"
-//               name="termGPA"
-//               value={formData.termGPA}
-//               onChange={handleChange}
-//             />
-//           </div>
-//         </div>
-//         <div className="form-column">
-//           <div>
-//             <label>15) National ID:</label>
-//             <input
-//               type="text"
-//               name="nationalID"
-//               value={formData.nationalID}
-//               onChange={handleChange}
-//             />
-//           </div>
-
-//           <div>
-//             <label>16) College:</label>
-//             <input
-//               type="text"
-//               name="college"
-//               value={formData.college}
-//               onChange={handleChange}
-//             />
-//           </div>
-
-//           <div>
-//             <label>17) Degree:</label>
-//             <input
-//               type="text"
-//               name="degree"
-//               value={formData.degree}
-//               onChange={handleChange}
-//             />
-//           </div>
-
-//           <div>
-//             <label>18) Academic Year-Time:</label>
-//             <input
-//               type="text"
-//               name="academicYearTime"
-//               value={formData.academicYearTime}
-//               onChange={handleChange}
-//             />
-//           </div>
-
-//           <div>
-//             <label>19) Term Major:</label>
-//             <input
-//               type="text"
-//               name="termMajor"
-//               value={formData.termMajor}
-//               onChange={handleChange}
-//             />
-//           </div>
-
-//           <div>
-//             <label>20) Course Name:</label>
-//             <input
-//               type="text"
-//               name="courseName"
-//               value={formData.courseName}
-//               onChange={handleChange}
-//             />
-//           </div>
-
-//           <div>
-//             <label>21) Grade:</label>
-//             <input
-//               type="text"
-//               name="grade"
-//               value={formData.grade}
-//               onChange={handleChange}
-//             />
-//           </div>
-
-//           <div>
-//             <label>22) Cumulative HRS:</label>
-//             <input
-//               type="text"
-//               name="cumulativeHRS"
-//               value={formData.cumulativeHRS}
-//               onChange={handleChange}
-//             />
-//           </div>
-
-//           <div>
-//             <label>23) Cumulative EHRS:</label>
-//             <input
-//               type="text"
-//               name="cumulativeEHRS"
-//               value={formData.cumulativeEHRS}
-//               onChange={handleChange}
-//             />
-//           </div>
-
-//           <div>
-//             <label>24) Cumulative GPA HRS:</label>
-//             <input
-//               type="text"
-//               name="cumulativeGPAHRS"
-//               value={formData.cumulativeGPAHRS}
-//               onChange={handleChange}
-//             />
-//           </div>
-
-//           <div>
-//             <label>25) Cumulative Points:</label>
-//             <input
-//               type="text"
-//               name="cumulativePoints"
-//               value={formData.cumulativePoints}
-//               onChange={handleChange}
-//             />
-//           </div>
-
-//           <div>
-//             <label>26) Cumulative GPA:</label>
-//             <input
-//               type="text"
-//               name="cumulativeGPA"
-//               value={formData.cumulativeGPA}
-//               onChange={handleChange}
-//             />
-//           </div>
-//         </div>
-//         <div className="form-button">
-//           <button type="submit"> {loading ? "Submitting..." : "Submit"}</button>
-//           <div>{result}</div>
-//         </div>
-//       </form>
-//     </div>
-//   );
-// };
-
-// export default UniversityForm;

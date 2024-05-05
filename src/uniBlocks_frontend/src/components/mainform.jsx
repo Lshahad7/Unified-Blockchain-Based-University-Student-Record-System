@@ -65,18 +65,6 @@ function MainForm(props) {
             <div className="bg-secondary">
                 <h1 className="text-center text-white ">University Home Page</h1>
             </div>
-            {/* <center>
-        {props.loggedInPrincipal ? (
-          <>{props.loggedInPrincipal._principal.toText()}</>
-        ) : (
-          <>
-            {" "}
-            <button onClick={props.onLoginClick} className="loginButton">
-              Login with Internet Identity
-            </button>
-          </>
-        )}
-      </center> */}
 
             <div style={styles.contentContainer}>
                 <section style={styles.textSection}></section>

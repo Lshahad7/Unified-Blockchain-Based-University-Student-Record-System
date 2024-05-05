@@ -12,7 +12,10 @@ import ViewTranscript from "./ViewTranscript";
 import VisitorDashboard from "./VisitorDashboard";
 import Guidelines from "./Guide";
 import MainForm from "./mainform";
+import API_Page from "./API_Page";
 import StudentLogin from "./studentLogin";
+import Student from "./Student";
+
 const styles = {
   contentContainer: {
     maxWidth: "800px",
@@ -70,17 +73,23 @@ function App(props) {
           </Route>
           <Route path="/student-login/" element={<StudentLogin />}>
           </Route>
-          <Route path="/university-dashboard" element={<UniversityDashboard onLoginClick={props.onLoginClick} loggedInPrincipal={props.loggedInPrincipal} />}>
-          </Route>
-          <Route path="/visitor-dashboard" element={<VisitorDashboard onLoginClick={props.onLoginClick} loggedInPrincipal={props.loggedInPrincipal}/>}>
+          {/*<Route path="/university-dashboard" element={<UniversityDashboard onLoginClick={props.onLoginClick} loggedInPrincipal={props.loggedInPrincipal} onDisconnect={props.onDisconnect}/>}>
+          </Route>*/}
+          <Route path="/visitor-dashboard" element={<VisitorDashboard onLoginClick={props.onLoginClick} loggedInPrincipal={props.loggedInPrincipal} onDisconnect={props.onDisconnect} />}>
           </Route>
           <Route path="/manage-api" element={<MainForm />}>
+          </Route>
+
+          <Route path="/API-Page" element={<API_Page/>}>
           </Route>
 
           <Route path="/guide-lines" element={<Guidelines />}>
           </Route>
 
           <Route path="/view-transcript" element={<ViewTranscript />}>
+          </Route>
+
+          <Route path="/view-student" element={<Student />}>
           </Route>
           
         </Routes>

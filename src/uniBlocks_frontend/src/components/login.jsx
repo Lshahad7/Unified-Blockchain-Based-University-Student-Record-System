@@ -25,11 +25,11 @@ function Login() {
                                 <h3 className="card-title">Student</h3>
                             </div>
                         </Link>
-                        <Link to="/visitor-dashboard?canisterId=bd3sg-teaaa-aaaaa-qaaba-cai" className="card col-md-4 mx-5" style={{ width: '18rem', height: '22rem' }}>
+                        {/*<Link to="/visitor-dashboard?canisterId=bd3sg-teaaa-aaaaa-qaaba-cai" className="card col-md-4 mx-5" style={{ width: '18rem', height: '22rem' }}>
                             <div className="card-body d-flex justify-content-center align-items-center">
                                 <h3 className="card-title">Visitor</h3>
                             </div>
-                        </Link>
+                        </Link>*/}
                     </div>
                 </div>
             </div>

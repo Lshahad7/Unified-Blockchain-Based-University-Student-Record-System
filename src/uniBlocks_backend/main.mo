@@ -55,6 +55,8 @@ actor university {
     description : Text;
     duration : Text;
     university : Text;
+    country: Text;
+    gpaScale: Text;
   };
 
   public func CreateAPI(
@@ -62,6 +64,8 @@ actor university {
     description : Text,
     duration : Text,
     university : Text,
+    country: Text,
+    gpaScale: Text
   ) : async Text {
 
     let API_URL : API = {
@@ -69,6 +73,8 @@ actor university {
       description = description;
       duration = duration;
       university = university;
+      country = country;
+      gpaScale = gpaScale;
     };
     if (user.get(api_url) == null) {
       api.put(api_url, API_URL);
@@ -87,6 +93,7 @@ actor university {
     letter_grade : Text;
     points : Text;
     term_id : Text;
+    class_nbr: Text;
   };
 
   type Term = {
@@ -106,6 +113,7 @@ actor university {
     student_id : Text;
     term_description : Text;
     term_id : Text; // Assuming you have a term ID field'
+    student_term_id: Text;
   };
   type University = {
     mergedID : Text;
@@ -157,12 +165,12 @@ actor university {
       transcriptID = transcriptID;
       term = term;
     };
-    if (map.get(mergedID) == null) {
+    // if (map.get(mergedID) == null) {
       map.put(mergedID, uniData);
       return "Success";
-    } else {
-      return "Faild: Data Already Exits";
-    };
+    // } else {
+    //   return "Faild: Data Already Exits";
+    // };
 
   };
   public query func QueryUniversity(id : Text) : async ?University {
@@ -198,5 +206,3 @@ actor university {
   };
 
 };
-
-
